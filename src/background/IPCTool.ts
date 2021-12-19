@@ -22,6 +22,7 @@ let handlers = async (win: BrowserWindow) => {
     }
   })
 
+  /*
   ipcMain.on('MINIMIZE_APP', async (event) => {
     win.minimize()
   })
@@ -34,8 +35,18 @@ let handlers = async (win: BrowserWindow) => {
     } else if (win.isMaximizable()) {
       win.setSize(640, 480)
       win.center()
-    }
-    
+    }  
+  })
+  */
+
+  ipcMain.on('MAXIMIZE_APP', async (event) => {
+    fs.open("/home/sphirye/Descargas/Telegram Desktop/Aspertia_City_Pokémon_Black2_White2_WIDKIJspfZ8_140.m4a", 'r+', function (err, f) {
+      if (err) {
+         return console.error(err);
+      }
+      console.log(f);
+      console.log("File opened!!");     
+    })
   })
 }
 

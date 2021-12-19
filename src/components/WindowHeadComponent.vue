@@ -2,7 +2,7 @@
   <v-app-bar class="header" height="40px" flat dark app>
 
     <v-row no-gutters justify="center" align="center">
-      <span>gordas explorer</span>
+      <span>Electron Explorer</span>
       <v-spacer/>
       <div>
         <v-icon class="control-button" @click="minimizeWindow()">fas fa-minus-circle</v-icon>

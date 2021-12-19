@@ -7,7 +7,7 @@
     </v-row>
     <v-row no-gutters>
       <v-col cols="6" sm="3" md="2" v-for="(folder, key) in folders" :key="key + '-folder'">
-        <v-card @click="openFolder(folder.name)" flat class="transparent" dark width="100%" height="150px">
+        <v-card @click="openFolder(folder.name)" flat class="transparent" dark width="100%" height="auto">
           <v-sheet class="transparent d-flex justify-center align-center" height="100px" width="100%">
             <v-icon color="brown" size="100">fas fa-folder</v-icon>
           </v-sheet>
@@ -17,9 +17,9 @@
         </v-card>
       </v-col>
       <v-col cols="6" sm="3" md="2" v-for="(file, key) in files" :key="key + '-file'">
-        <v-card @click="" flat class="transparent" dark width="100%" height="150px">
+        <v-card @click="log(file)" flat class="transparent" dark width="100%" height="auto">
           <v-sheet class="transparent d-flex justify-center align-center" height="100px" width="100%">
-            <v-icon color="grey lighten-1" size="90">fas fa-file</v-icon>
+            <v-icon color="grey lighten-1" size="90">{{getExtensionFile(file)}}</v-icon>
           </v-sheet>
           <v-card-text>
             <span v-line-clamp="2" class="text-h6 text-center">{{file.filename}}</span>
@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator"
+import { Component, Vue, Watch } from "vue-property-decorator"
 import DefaultComponent from "@/components/DefaultComponent.vue"
 import { getModule } from "vuex-module-decorators"
 import Dialog from "@/models/vue/Dialog"
@@ -104,6 +104,31 @@ export default class Home extends Vue {
       )
     )
   }
+
+  log(file: File) {
+    console.log(file.filename!.match(/\.[0-9a-z]{1,5}$/i))
+  }
+
+  getExtensionFile(file: File) {
+    let extension: string = (file.filename!.match(/\.[0-9a-z]{1,5}$/i) || [""])[0]
+
+    switch (extension) {
+      case (".png"): { return("fas fa-image") }
+      case (".gif"): { return("fas fa-image") }
+      case (".jpeg"): { return("fas fa-image") }
+      case (".jpg"): { return("fas fa-image") }
+      case (".wav"): { return("fas fa-music") }
+      case (".m4a"): { return("fas fa-music") }
+      case (".ogg"): { return("fas fa-music") }
+      case (".mp3"): { return("fas fa-music") }
+      case (".mp4"): { return("fas fa-film") }
+      case (".txt"): { return("fas fa-file-alt") }
+      case (".pdf"): { return("fas fa-file-pdf") }
+    
+      default: { return("fas fa-file") }
+    }
+  }
+
 }
 
 </script>
