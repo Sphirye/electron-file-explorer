@@ -6,10 +6,16 @@ import os from "os"
 @Module({dynamic: true, store, name: "DialogModule"})
 export default class DirectoryModule extends VuexModule {
 
-  path: string = os.homedir()
+  path: string = "/"
+  loading: boolean = false
 
   @Mutation
   setPath(path: string) {
     this.path = path
+  }
+
+  @Mutation
+  setLoading(loading: boolean) {
+    this.loading = loading
   }
 }

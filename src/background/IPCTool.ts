@@ -11,6 +11,10 @@ import DirectoryModule from '@/store/DirectoryModule'
 
 let handlers = async (win: BrowserWindow) => {
 
+  ipcMain.on('GET_HOME_DIR', async (event) => {
+    event.reply('GET_HOME_DIR', { homedir: os.homedir() })
+  })
+
   ipcMain.on('GET_DIR_DATA', async (event, payload) => {
     if (await FsTool.isAccesible(payload.path)) {
       let files: File[] = await FsTool.getFilesFromDir(payload.path)
@@ -18,7 +22,7 @@ let handlers = async (win: BrowserWindow) => {
       getModule(DirectoryModule).setPath(payload.path)
       event.reply('GET_DIR_DATA', { files: files, directories: directories })
     } else {
-      console.log("INACCESIBLE XDDD")
+      console.log(`No se pudo acceder a la ruta ${payload.path}`)
     }
   })
 

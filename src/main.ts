@@ -10,10 +10,19 @@ import '@mdi/font/css/materialdesignicons.css'
 import lineClamp from "vue-line-clamp"
 import axios from "axios"
 import vueAxios from "vue-axios"
+import { getModule } from 'vuex-module-decorators'
+import DirectoryModule from './store/DirectoryModule'
 
 Vue.config.productionTip = false
 Vue.use(lineClamp)
 Vue.use(vueAxios, axios)
+
+window.ipc.send('GET_HOME_DIR')
+
+window.ipc.on('GET_HOME_DIR', (payload: any) => {
+  getModule(DirectoryModule).setPath(payload.homedir)
+  console.log(payload.homedir)
+})
 
 new Vue({
   router,

@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
-const validChannels = ['GET_DIR_DATA', 'MINIMIZE_APP', 'MAXIMIZE_APP']
+const validChannels = ['GET_DIR_DATA', 'MINIMIZE_APP', 'MAXIMIZE_APP', 'GET_HOME_DIR']
 contextBridge.exposeInMainWorld(
   'ipc', {
     send: (channel, data) => {

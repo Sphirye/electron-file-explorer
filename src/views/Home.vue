@@ -1,11 +1,15 @@
 <template>
   <v-container fluid>
-    <v-row no-gutters>
-      <v-btn dark @click="backFolder()" class="mx-3" icon>
-        <v-icon size="40">far fa-arrow-alt-circle-left</v-icon>
-      </v-btn>
+    <v-row class="grey darken-4">
+      <v-col cols="12" class="grey darken-4">
+        <v-btn dark @click="backFolder()" icon>
+          <v-icon size="40">far fa-arrow-alt-circle-left</v-icon>
+        </v-btn>
+        <v-progress-linear class="mt-3" :indeterminate="loading" color="white"/>
+      </v-col>
     </v-row>
-    <v-row no-gutters>
+
+    <v-row>
       <v-col cols="6" sm="3" md="2" v-for="(folder, key) in folders" :key="key + '-folder'">
         <v-card @click="openFolder(folder.name)" flat class="transparent" dark width="100%" height="auto">
           <v-sheet class="transparent d-flex justify-center align-center" height="100px" width="100%">
@@ -52,30 +56,23 @@ export default class Home extends Vue {
   directory: Directory = new Directory()
   files: File[] = []
   folders: Directory[] = []
+  loading: boolean = false
 
   dir: any = undefined
 
   backFolder() {
     let path = this.path
-
-    //Makes sure theres not a / at final path char
-    //if (path.lastIndexOf('/') == path.length - 1) {
-    //  path = path.slice(path.length - 1, path.length)
-    //}
-
     path = path.slice(0, path.lastIndexOf('/') + 1)
     if (path.length != 0) {
       this.directoryModule.setPath(path)
       this.refresh()
-      console.log(path)
     }
+    console.log(path)
   }
 
   openFolder(v: any) {
     let path = (this.path) + (this.path.lastIndexOf('/') != this.path.length - 1 ? '/' : '') + v
     this.directoryModule.setPath(path)
-    this.refresh()
-    console.log(path)
   }
 
   mounted() {
@@ -89,11 +86,14 @@ export default class Home extends Vue {
 
   getDirData() {
     window.ipc.on('GET_DIR_DATA', (payload: any) => {
-      this.files.splice(0, this.files.length)
-      this.folders.splice(0, this.folders.length)
-
-      this.files = payload.files
-      this.folders = payload.directories
+      try {
+        this.files = payload.files
+        this.folders = payload.directories
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.loading = false
+      }
     })
   }
 
@@ -104,7 +104,7 @@ export default class Home extends Vue {
       )
     )
   }
-
+  
   log(file: File) {
     console.log(file.filename!.match(/\.[0-9a-z]{1,5}$/i))
   }
@@ -129,6 +129,17 @@ export default class Home extends Vue {
     }
   }
 
+  @Watch('path')
+  onPathChanged() {
+    this.loading = true
+    this.files.splice(0, this.files.length)
+    this.folders.splice(0, this.folders.length)
+    this.refresh()
+    console.log(this.path)
+  }
 }
 
 </script>
+
+<style>
+</style>
